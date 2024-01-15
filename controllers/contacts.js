@@ -5,8 +5,7 @@ const getAll = async (req, res) => {
     const result = await mongodb.getDatabase().db().collection('contacts').find();
     result.toArray().then((users) => {
         res.setHeader('Content-type', 'application/json');
-        res.status(200).json(users);
- 
+        res.status(200).json(users); 
     });    
 };
 
