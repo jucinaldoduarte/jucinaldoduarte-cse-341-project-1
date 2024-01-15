@@ -1,31 +1,27 @@
 const mongodb = require('../data/database');
-const ObjectId = require(`mongodb`).ObjectId;
+const ObjectId = require('mongodb').ObjectId;
 
 const getAll = async (req, res) => {  
-    try {
-        const result = await mongodb.getDatabase().collection('contacts').find().toArray(); 
+    const result = await mongodb.getDatabase().db().collection('contacts').find();
+    result.toArray().then((users) => {
         res.setHeader('Content-type', 'application/json');
-        res.status(200).json(result);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+        res.status(200).json(users);
+ 
+    });    
 };
 
 const getSingle = async (req, res) => {
-    try {
-        const userId = new ObjectId(req.params.id);        
-        const result = await mongodb.getDatabase().db().collection('contacts').findOne({ _id: userId });
-        res.setHeader('Content-type', 'application/json');
-        res.status(200).json(result);
-    } catch (error) {
-        // Error
-        res.status(500).json({ error: error.message });      
-       
-    }
-};
+    const userId = new ObjectId(req.params.id);
+    //const result = await mongodb.getDatabase().db('contactsProject').collection('users').find();
+    const result = await mongodb.getDatabase().db().collection('contacts').find({_id: userId});
+    result.toArray().then((users) => {
+     res.setHeader('Content-type', 'application/json');
+     res.status(200).json(users[0]);
+ 
+    });
+ };
 
 module.exports = {
     getAll,
     getSingle
 };
-
